@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prison Letters Interactive Study | 옥중서신 인터랙티브 스터디</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c5282;
+            --primary-light: #4299e1;
+            --secondary: #744210;
+            --accent: #d97706;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --text-dark: #1a202c;
+            --text-gray: #4a5568;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --error: #f56565;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.8;
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .lang-toggle {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-toggle:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-white);
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 130px;
+            z-index: 99;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--text-dark);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        section {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--primary-light);
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            color: var(--text-dark);
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Scholarly Box */
+        .scholar-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .scholar-box strong {
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Context Cards */
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .context-card {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .context-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Key Text Box */
+        .key-text {
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 6px solid var(--primary);
+            font-family: 'Georgia', serif;
+        }
+
+        .key-text .verse {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1rem;
+        }
+
+        .key-text .reference {
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Theme Cards */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .theme-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .theme-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+
+        .theme-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .quiz-question h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .quiz-options {
+            margin-top: 1rem;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-light);
+            background: var(--bg-light);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: #e0e7ff;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #c6f6d5;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error);
+            background: #fed7d7;
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: #c6f6d5;
+            border: 2px solid var(--success);
+            color: #22543d;
+        }
+
+        .quiz-feedback.incorrect {
+            background: #fed7d7;
+            border: 2px solid var(--error);
+            color: #742a2a;
+        }
+
+        .quiz-submit {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .quiz-submit:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, var(--success) 0%, #48bb78 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+        }
+
+        /* Language Toggle */
+        .lang-en { display: block; }
+        .lang-ko { display: none; }
+
+        body.korean .lang-en { display: none; }
+        body.korean .lang-ko { display: block; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+
+            .context-grid,
+            .theme-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .mb-2 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 1rem; }
+        .text-center { text-align: center; }
+        .hidden { display: none; }
+
+        /* Coordinate Header */
+        .coordinates {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .coordinates strong {
+            color: #fbbf24;
+        }
+
+        /* Letter Navigation */
+        .letter-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .letter-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .letter-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .letter-card h3 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .letter-card p {
+            margin-top: 0.5rem;
+            color: var(--text-gray);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="lang-en">Prison Letters: Interactive Formation Study</h1>
+            <h1 class="lang-ko">옥중서신: 인터랙티브 형성 연구</h1>
+            
+            <p class="lang-en">Integrating Top NT Scholars: Brown, Ehrman, Carson/Moo, Keener, Thielman</p>
+            <p class="lang-ko">최고 신약학자 통합: 브라운, 어만, 카슨/무, 키너, 틸만</p>
+            
+            <div class="header-controls">
+                <button class="lang-toggle" onclick="toggleLanguage()">
+                    <span class="lang-en">한국어</span>
+                    <span class="lang-ko">English</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <div class="nav-links">
+                <button class="nav-btn active" data-section="overview" onclick="showSection('overview')">
+                    <span class="lang-en">Overview</span>
+                    <span class="lang-ko">개요</span>
+                </button>
+                <button class="nav-btn" data-section="ephesians" onclick="showSection('ephesians')">
+                    <span class="lang-en">Ephesians</span>
+                    <span class="lang-ko">에베소서</span>
+                </button>
+                <button class="nav-btn" data-section="philippians" onclick="showSection('philippians')">
+                    <span class="lang-en">Philippians</span>
+                    <span class="lang-ko">빌립보서</span>
+                </button>
+                <button class="nav-btn" data-section="colossians" onclick="showSection('colossians')">
+                    <span class="lang-en">Colossians</span>
+                    <span class="lang-ko">골로새서</span>
+                </button>
+                <button class="nav-btn" data-section="philemon" onclick="showSection('philemon')">
+                    <span class="lang-en">Philemon</span>
+                    <span class="lang-ko">빌레몬서</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- OVERVIEW SECTION -->
+        <section id="overview" class="content-section">
+            <div class="coordinates">
+                <strong>[2×2]:</strong> Etic-person in Emic-space (modern students entering Prison Letters text-world)<br>
+                <strong>[7×3]:</strong> Narrative-World → Reader-World – Emic → Transitional → Etic<br>
+                <strong>[MDHC]:</strong> T=Kairotic (formation moment), S=Transitional (building bridges), M=Toward-Justice
+            </div>
+
+            <h2 class="lang-en">Prison Letters: Suffering, Solidarity, and Spatial Reconfiguration</h2>
+            <h2 class="lang-ko">옥중서신: 고난, 연대, 그리고 공간적 재구성</h2>
+
+            <div class="scholar-box">
+                <strong class="lang-en">Top 5 Scholarly Framework</strong>
+                <strong class="lang-ko">최고 5대 학문적 틀</strong>
+                <p class="lang-en">
+                    This study integrates insights from five leading NT scholars: <strong>Raymond E. Brown</strong> (canonical-critical balance), 
+                    <strong>Bart D. Ehrman</strong> (social-historical reconstruction), <strong>D.A. Carson & Douglas J. Moo</strong> 
+                    (evangelical-critical synthesis), <strong>Craig S. Keener</strong> (Greco-Roman cultural context), and 
+                    <strong>Frank Thielman</strong> (narrative theology).
+                </p>
+                <p class="lang-ko">
+                    본 연구는 5명의 주요 신약학자들의 통찰을 통합합니다: <strong>레이몬드 E. 브라운</strong> (정경-비평적 균형), 
+                    <strong>바트 D. 어만</strong> (사회-역사적 재구성), <strong>D.A. 카슨 & 더글러스 J. 무</strong> 
+                    (복음주의-비평적 종합), <strong>크레이그 S. 키너</strong> (그리스-로마 문화 맥락), 
+                    <strong>프랭크 틸만</strong> (내러티브 신학).
+                </p>
+            </div>
+
+            <h3 class="lang-en">What Are the Prison Letters?</h3>
+            <h3 class="lang-ko">옥중서신이란?</h3>
+
+            <p class="lang-en">
+                The Prison Letters (or "Captivity Epistles") are four New Testament letters traditionally attributed to the Apostle Paul, 
+                written during his imprisonment: <strong>Ephesians, Philippians, Colossians, and Philemon</strong>. These letters were 
+                composed around 60-62 CE, likely during Paul's Roman house arrest (Acts 28:16-31), though some scholars propose an 
+                earlier Ephesian imprisonment (ca. 54-56 CE) for Philippians and Philemon.
+            </p>
+            <p class="lang-ko">
+                옥중서신(또는 "포로서신")은 사도 바울이 투옥 중에 쓴 것으로 전통적으로 귀속된 네 개의 신약 서신입니다: 
+                <strong>에베소서, 빌립보서, 골로새서, 빌레몬서</strong>. 이 서신들은 주후 60-62년경, 바울의 로마 가택 연금 
+                중에 작성되었을 가능성이 높습니다(사도행전 28:16-31). 일부 학자들은 빌립보서와 빌레몬서가 더 이른 시기의 
+                에베소 수감(주후 54-56년경) 중에 쓰였다고 제안합니다.
+            </p>
+
+            <h3 class="lang-en">The Four Letters at a Glance</h3>
+            <h3 class="lang-ko">네 서신 한눈에 보기</h3>
+
+            <div class="letter-nav">
+                <div class="letter-card" onclick="showSection('ephesians')">
+                    <h3 class="lang-en">Ephesians</h3>
+                    <h3 class="lang-ko">에베소서</h3>
+                    <p class="lang-en">Cosmic Ecclesiology: Unity in Christ</p>
+                    <p class="lang-ko">우주적 교회론: 그리스도 안의 연합</p>
+                </div>
+                
+                <div class="letter-card" onclick="showSection('philippians')">
+                    <h3 class="lang-en">Philippians</h3>
+                    <h3 class="lang-ko">빌립보서</h3>
+                    <p class="lang-en">Joy in Suffering: Kenotic Partnership</p>
+                    <p class="lang-ko">고난 속의 기쁨: 케노시스적 동역</p>
+                </div>
+                
+                <div class="letter-card" onclick="showSection('colossians')">
+                    <h3 class="lang-en">Colossians</h3>
+                    <h3 class="lang-ko">골로새서</h3>
+                    <p class="lang-en">Christ's Supremacy: Above All Powers</p>
+                    <p class="lang-ko">그리스도의 우월성: 모든 권세 위에</p>
+                </div>
+                
+                <div class="letter-card" onclick="showSection('philemon')">
+                    <h3 class="lang-en">Philemon</h3>
+                    <h3 class="lang-ko">빌레몬서</h3>
+                    <p class="lang-en">Reconciliation: Brother, Not Slave</p>
+                    <p class="lang-ko">화해: 종이 아닌 형제</p>
+                </div>
+            </div>
+
+            <div class="scholar-box mt-2">
+                <strong class="lang-en">Brown's Hermeneutical Posture</strong>
+                <strong class="lang-ko">브라운의 해석학적 입장</strong>
+                <p class="lang-en">
+                    "The precise location of Paul's imprisonment is <strong>less crucial</strong> than recognizing that 
+                    <strong>suffering became a hermeneutical lens</strong> through which Paul re-narrated Christ, church, and cosmos." 
+                    (Brown, <em>Introduction</em>, 503)
+                </p>
+                <p class="lang-ko">
+                    "바울의 수감 정확한 위치는 바울이 그리스도, 교회, 우주를 다시 서술한 <strong>해석학적 렌즈로서 고난이 되었다는 
+                    것</strong>을 인식하는 것보다 <strong>덜 중요</strong>합니다." (브라운, <em>서론</em>, 503)
+                </p>
+            </div>
+        </section>
+
+        <!-- EPHESIANS SECTION -->
+        <section id="ephesians" class="content-section hidden">
+            <h2 class="lang-en">Ephesians: Cosmic Ecclesiology in Chains</h2>
+            <h2 class="lang-ko">에베소서: 사슬에 매인 우주적 교회론</h2>
+
+            <h3 class="lang-en">1. Pre-Exegetical Contexts</h3>
+            <h3 class="lang-ko">1. 전(前)주해적 맥락</h3>
+
+            <div class="context-grid">
+                <div class="context-card">
+                    <h4 class="lang-en">📅 Historical Context</h4>
+                    <h4 class="lang-ko">📅 역사적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Date:</strong> ca. 60-62 CE (if by Paul) or 70-90 CE (if deutero-Pauline)<br>
+                        <strong>Location:</strong> Rome or Ephesus<br>
+                        <strong>Authorship Debate:</strong> Disputed by most critical scholars due to vocabulary (80+ unique words), 
+                        style (long liturgical sentences), and developed ecclesiology. Brown places it in "Deutero-Pauline" category 
+                        but affirms canonical authority.
+                    </p>
+                    <p class="lang-ko">
+                        <strong>연대:</strong> 주후 60-62년경(바울이 저자인 경우) 또는 70-90년경(제2 바울학파인 경우)<br>
+                        <strong>장소:</strong> 로마 또는 에베소<br>
+                        <strong>저작권 논쟁:</strong> 어휘(80개 이상의 고유 단어), 문체(긴 전례적 문장), 발전된 교회론으로 인해 
+                        대부분의 비평 학자들에 의해 논쟁됨. 브라운은 이를 "제2 바울학파" 범주에 두지만 정경적 권위를 인정함.
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">📖 Literary Context</h4>
+                    <h4 class="lang-ko">📖 문학적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Genre:</strong> Circular letter (no specific local issues)<br>
+                        <strong>Structure:</strong> Two-part: Chs. 1-3 (Cosmic Indicative: "This is where you are"), 
+                        Chs. 4-6 (Ecclesial Imperative: "This is how you walk")<br>
+                        <strong>Key Feature:</strong> Eph 1:3-14 is one Greek sentence—liturgical, hymnic style
+                    </p>
+                    <p class="lang-ko">
+                        <strong>장르:</strong> 회람 서신(특정 지역 문제 없음)<br>
+                        <strong>구조:</strong> 두 부분: 1-3장(우주적 직설법: "당신이 있는 곳"), 
+                        4-6장(교회적 명령법: "당신이 걸어야 할 방법")<br>
+                        <strong>주요 특징:</strong> 엡 1:3-14는 하나의 그리스어 문장—전례적, 찬송적 스타일
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">🏛️ Cultural Context</h4>
+                    <h4 class="lang-ko">🏛️ 문화적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Ephesus:</strong> Provincial capital of Asia Minor, temple of Artemis (one of Seven Wonders), 
+                        major trade hub, diverse religious environment<br>
+                        <strong>Social Structure:</strong> Greco-Roman household codes (paterfamilias authority), 
+                        patronage networks, slavery integral to economy<br>
+                        <strong>Keener's Insight:</strong> "Household codes" (5:21-6:9) must be read against Roman patriarchal norms—
+                        mutual submission (5:21) was radical
+                    </p>
+                    <p class="lang-ko">
+                        <strong>에베소:</strong> 소아시아의 지방 수도, 아르테미스 신전(세계 7대 불가사의 중 하나), 
+                        주요 무역 중심지, 다양한 종교 환경<br>
+                        <strong>사회 구조:</strong> 그리스-로마 가정 규범(가장 권위), 후원 네트워크, 경제에 필수적인 노예제<br>
+                        <strong>키너의 통찰:</strong> "가정 규범"(5:21-6:9)은 로마 가부장적 규범에 반하여 읽어야 함—
+                        상호 복종(5:21)은 급진적이었음
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">2. Key Text and Comprehensive Themes</h3>
+            <h3 class="lang-ko">2. 핵심 본문과 포괄적 주제</h3>
+
+            <div class="key-text">
+                <div class="verse lang-en">
+                    <strong>Ephesians 3:10-11</strong><br>
+                    "...so that through the church the manifold wisdom of God might now be made known to the <strong>rulers 
+                    and authorities in the heavenly places</strong>. This was according to the eternal purpose that he has 
+                    realized in Christ Jesus our Lord."
+                </div>
+                <div class="verse lang-ko">
+                    <strong>에베소서 3:10-11</strong><br>
+                    "이는 이제 교회로 말미암아 하늘에 있는 <strong>통치자들과 권세들에게</strong> 하나님의 각종 지혜를 
+                    알게 하려 하심이니 곧 영원부터 우리 주 그리스도 예수 안에서 예정하신 뜻대로 하신 것이라."
+                </div>
+                <span class="reference">ESV / 개역개정</span>
+            </div>
+
+            <div class="scholar-box">
+                <strong class="lang-en">Thielman's Insight (Narrative Theology)</strong>
+                <strong class="lang-ko">틸만의 통찰 (내러티브 신학)</strong>
+                <p class="lang-en">
+                    "The <strong>church itself</strong> is God's apocalyptic revelation to cosmic powers. Not a future event—
+                    <strong>present reality</strong>: Every time Jew and Gentile eat together, the 'mystery' (μυστήριον) is displayed. 
+                    Imprisoned Paul paradoxically becomes enthroned as agent of cosmic drama."
+                </p>
+                <p class="lang-ko">
+                    "<strong>교회 자체</strong>가 우주적 권세들에 대한 하나님의 묵시적 계시입니다. 미래의 사건이 아니라—
+                    <strong>현재의 실재</strong>: 유대인과 이방인이 함께 식사할 때마다 '신비'(μυστήριον)가 드러납니다. 
+                    투옥된 바울은 역설적으로 우주적 드라마의 대리인으로 즉위합니다."
+                </p>
+            </div>
+
+            <h4 class="lang-en">Core Themes</h4>
+            <h4 class="lang-ko">핵심 주제</h4>
+
+            <div class="theme-grid">
+                <div class="theme-card">
+                    <h4 class="lang-en">🌌 Cosmic Scope</h4>
+                    <h4 class="lang-ko">🌌 우주적 범위</h4>
+                    <p class="lang-en">
+                        Christ is "head over all things" (1:22), seated "in the heavenly places" (ἐν τοῖς ἐπουρανίοις, 1:20). 
+                        The church is seated with Christ (2:6), above all cosmic powers.
+                    </p>
+                    <p class="lang-ko">
+                        그리스도는 "만물 위에 계신 머리"(1:22)이시며, "하늘에"(ἐν τοῖς ἐπουρανίοις, 1:20) 앉아 계십니다. 
+                        교회는 그리스도와 함께 앉아(2:6), 모든 우주적 권세 위에 있습니다.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🤝 Unity: Jew + Gentile</h4>
+                    <h4 class="lang-ko">🤝 연합: 유대인 + 이방인</h4>
+                    <p class="lang-en">
+                        The dividing wall is broken (2:14). Gentiles are no longer "strangers" (ξένοι) but "fellow citizens" 
+                        (συμπολῖται, 2:19). One new humanity (εἷς καινὸς ἄνθρωπος, 2:15).
+                    </p>
+                    <p class="lang-ko">
+                        막힌 담이 허물어졌습니다(2:14). 이방인들은 더 이상 "외인"(ξένοι)이 아니라 "동일한 시민"
+                        (συμπολῖται, 2:19)입니다. 한 새 사람(εἷς καινὸς ἄνθρωπος, 2:15).
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🔐 The Mystery Revealed</h4>
+                    <h4 class="lang-ko">🔐 계시된 신비</h4>
+                    <p class="lang-en">
+                        The "mystery" (μυστήριον, 3:3-6) hidden for ages: Gentiles are co-heirs, co-members, co-sharers in the 
+                        promise. Paul's imprisonment reveals this truth.
+                    </p>
+                    <p class="lang-ko">
+                        만세에 감추어졌던 "신비"(μυστήριον, 3:3-6): 이방인들이 함께 후사가 되고, 함께 지체가 되고, 
+                        약속을 함께 나누는 자가 되었습니다. 바울의 투옥이 이 진리를 드러냅니다.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">👨‍👩‍👧‍👦 Household Reconfiguration</h4>
+                    <h4 class="lang-ko">👨‍👩‍👧‍👦 가정 재구성</h4>
+                    <p class="lang-en">
+                        Household codes (5:21-6:9) begin with "Submit to one another" (5:21)—mutual submission precedes 
+                        specific instructions. Wives-husbands, children-parents, slaves-masters all under Christ's Lordship.
+                    </p>
+                    <p class="lang-ko">
+                        가정 규범(5:21-6:9)은 "피차 복종하라"(5:21)로 시작—상호 복종이 구체적 지시에 선행합니다. 
+                        아내-남편, 자녀-부모, 종-주인 모두 그리스도의 주권 아래 있습니다.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">⚔️ Spiritual Warfare</h4>
+                    <h4 class="lang-ko">⚔️ 영적 전쟁</h4>
+                    <p class="lang-en">
+                        "Our struggle is not against flesh and blood, but against rulers, authorities, cosmic powers" (6:12). 
+                        Armor of God (6:10-18): truth, righteousness, gospel, faith, salvation, Spirit, prayer.
+                    </p>
+                    <p class="lang-ko">
+                        "우리의 씨름은 혈과 육을 상대하는 것이 아니요 통치자들과 권세들과 우주의 권력자들과 상대함이라"(6:12). 
+                        하나님의 전신갑주(6:10-18): 진리, 의, 복음, 믿음, 구원, 성령, 기도.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🏗️ Church as Building/Body</h4>
+                    <h4 class="lang-ko">🏗️ 건물/몸으로서의 교회</h4>
+                    <p class="lang-en">
+                        Church is built on foundation of apostles/prophets (2:20), with Christ as cornerstone. Also: body of 
+                        Christ (4:15-16), growing into maturity, "speaking truth in love."
+                    </p>
+                    <p class="lang-ko">
+                        교회는 사도들과 선지자들의 터 위에 세워졌고(2:20), 그리스도가 모퉁이 돌입니다. 또한: 그리스도의 
+                        몸(4:15-16), 성숙을 향해 자라가며, "사랑 안에서 진리를 말함."
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">3. Quiz: Test Your Understanding</h3>
+            <h3 class="lang-ko">3. 퀴즈: 이해도 점검</h3>
+
+            <div class="quiz-container" id="quiz-ephesians">
+                <!-- Quiz questions will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- PHILIPPIANS SECTION -->
+        <section id="philippians" class="content-section hidden">
+            <h2 class="lang-en">Philippians: Joy from the Margins</h2>
+            <h2 class="lang-ko">빌립보서: 주변부로부터의 기쁨</h2>
+
+            <h3 class="lang-en">1. Pre-Exegetical Contexts</h3>
+            <h3 class="lang-ko">1. 전(前)주해적 맥락</h3>
+
+            <div class="context-grid">
+                <div class="context-card">
+                    <h4 class="lang-en">📅 Historical Context</h4>
+                    <h4 class="lang-ko">📅 역사적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Date:</strong> ca. 60-62 CE (Rome) or 54-56 CE (Ephesus)<br>
+                        <strong>Authorship:</strong> Undisputed Pauline—all five scholars agree<br>
+                        <strong>Occasion:</strong> Paul imprisoned, facing possible execution (1:20-24). Philippians sent 
+                        Epaphroditus with financial support (4:10-18). Paul writes to thank them, address internal conflicts 
+                        (Euodia/Syntyche, 4:2-3), and warn against "Judaizers" (3:2).
+                    </p>
+                    <p class="lang-ko">
+                        <strong>연대:</strong> 주후 60-62년경(로마) 또는 54-56년경(에베소)<br>
+                        <strong>저자:</strong> 논쟁 없는 바울 서신—5명의 학자 모두 동의<br>
+                        <strong>계기:</strong> 바울 투옥, 처형 가능성 직면(1:20-24). 빌립보인들이 에바브로디도를 재정 지원과 함께 
+                        보냄(4:10-18). 바울은 감사하고, 내부 갈등을 다루고(유오디아/순두게, 4:2-3), "유대주의자들"을 경고하기 
+                        위해 씀(3:2).
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">📖 Literary Context</h4>
+                    <h4 class="lang-ko">📖 문학적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Genre:</strong> Friendship letter + parenetic (moral exhortation)<br>
+                        <strong>Structure:</strong> 1:1-26 (Paul's situation), 1:27-2:18 (Christological hymn + application), 
+                        2:19-3:1 (travel plans), 3:2-21 (autobiography as warning), 4:1-23 (final exhortations)<br>
+                        <strong>Key Feature:</strong> Phil 2:6-11 is a pre-Pauline hymn—Paul adapts it for his context
+                    </p>
+                    <p class="lang-ko">
+                        <strong>장르:</strong> 우정 서신 + 권면적(도덕적 권고)<br>
+                        <strong>구조:</strong> 1:1-26(바울의 상황), 1:27-2:18(기독론 찬가 + 적용), 
+                        2:19-3:1(여행 계획), 3:2-21(경고로서의 자서전), 4:1-23(최종 권면)<br>
+                        <strong>주요 특징:</strong> 빌 2:6-11은 전(前)바울 찬가—바울이 자신의 맥락에 맞게 조정
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">🏛️ Cultural Context</h4>
+                    <h4 class="lang-ko">🏛️ 문화적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Philippi:</strong> Roman <em>colonia</em> (military veterans settled), Latin-speaking, 
+                        emperor loyalty central to identity. Paul and Silas beaten/imprisoned there (Acts 16:19-40).<br>
+                        <strong>Imperial Cult:</strong> Caesar = "savior" (σωτήρ), "lord" (κύριος). Phil 2:11 ("Jesus is Lord") 
+                        is counter-imperial claim.<br>
+                        <strong>Keener's Insight:</strong> "Form of God/slave" (μορφῇ θεοῦ/δούλου) = status markers in Roman honor culture
+                    </p>
+                    <p class="lang-ko">
+                        <strong>빌립보:</strong> 로마 <em>식민지</em>(퇴역 군인 정착지), 라틴어 사용, 황제 충성이 정체성의 중심. 
+                        바울과 실라가 그곳에서 매 맞고 투옥됨(사도행전 16:19-40).<br>
+                        <strong>황제 숭배:</strong> 카이사르 = "구원자"(σωτήρ), "주"(κύριος). 빌 2:11("예수는 주")은 
+                        반(反)제국적 주장.<br>
+                        <strong>키너의 통찰:</strong> "하나님의 형상/종의 형상"(μορφῇ θεοῦ/δούλου) = 로마 명예 문화의 지위 표지
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">2. Key Text and Comprehensive Themes</h3>
+            <h3 class="lang-ko">2. 핵심 본문과 포괄적 주제</h3>
+
+            <div class="key-text">
+                <div class="verse lang-en">
+                    <strong>Philippians 2:6-8</strong><br>
+                    "Who, though he was in the <strong>form of God</strong>, did not count equality with God a thing to be grasped, 
+                    but <strong>emptied himself</strong>, by taking the <strong>form of a servant</strong>, being born in the likeness of men. 
+                    And being found in human form, he <strong>humbled himself</strong> by becoming obedient to the point of death, 
+                    even <strong>death on a cross</strong>."
+                </div>
+                <div class="verse lang-ko">
+                    <strong>빌립보서 2:6-8</strong><br>
+                    "그는 근본 <strong>하나님의 본체</strong>시나 하나님과 동등됨을 취할 것으로 여기지 아니하시고 
+                    오히려 <strong>자기를 비워</strong> <strong>종의 형체</strong>를 가지사 사람들과 같이 되셨고 
+                    사람의 모양으로 나타나사 <strong>자기를 낮추시고</strong> 죽기까지 복종하셨으니 곧 <strong>십자가에 
+                    죽으심</strong>이라."
+                </div>
+                <span class="reference">ESV / 개역개정</span>
+            </div>
+
+            <div class="scholar-box">
+                <strong class="lang-en">Carson/Moo's Exegetical Note</strong>
+                <strong class="lang-ko">카슨/무의 주해적 주석</strong>
+                <p class="lang-en">
+                    "The hymn traces two movements: <strong>descent</strong> (divine → incarnate → slave → crucified) and 
+                    <strong>ascent</strong> (death → resurrection → exaltation → universal lordship). Paul's hermeneutical genius: 
+                    'Have this mind' (2:5)—not just admiration, but <strong>imitation in community</strong>."
+                </p>
+                <p class="lang-ko">
+                    "찬가는 두 가지 운동을 추적합니다: <strong>하강</strong>(신적 → 육화 → 종 → 십자가형)과 
+                    <strong>상승</strong>(죽음 → 부활 → 높여짐 → 우주적 주권). 바울의 해석학적 천재성: 
+                    '이 마음을 품으라'(2:5)—단순한 감탄이 아니라 <strong>공동체 안에서의 모방</strong>."
+                </p>
+            </div>
+
+            <h4 class="lang-en">Core Themes</h4>
+            <h4 class="lang-ko">핵심 주제</h4>
+
+            <div class="theme-grid">
+                <div class="theme-card">
+                    <h4 class="lang-en">😊 Joy in Suffering</h4>
+                    <h4 class="lang-ko">😊 고난 속의 기쁨</h4>
+                    <p class="lang-en">
+                        "Rejoice in the Lord always" (4:4) appears 16 times in the letter. Paul's chains = gospel advance (1:12-14). 
+                        Joy is not circumstantial but Christological.
+                    </p>
+                    <p class="lang-ko">
+                        "주 안에서 항상 기뻐하라"(4:4)가 서신에 16번 등장합니다. 바울의 사슬 = 복음 전진(1:12-14). 
+                        기쁨은 상황적이지 않고 기독론적입니다.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🤝 Partnership (κοινωνία)</h4>
+                    <h4 class="lang-ko">🤝 동역 (κοινωνία)</h4>
+                    <p class="lang-en">
+                        "Partnership in the gospel" (1:5)—horizontal relationship, not patron-client. Philippians share in Paul's 
+                        sufferings (1:29-30) and support (4:15-16).
+                    </p>
+                    <p class="lang-ko">
+                        "복음에서의 동역"(1:5)—수평적 관계, 후원자-의뢰인이 아님. 빌립보인들은 바울의 
+                        고난(1:29-30)과 지원(4:15-16)을 함께 나눕니다.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">↓ Kenosis (Self-Emptying)</h4>
+                    <h4 class="lang-ko">↓ 케노시스 (자기 비움)</h4>
+                    <p class="lang-en">
+                        Christ "emptied himself" (ἐκένωσεν, 2:7)—not deity, but status. Model for community: stop competing for 
+                        honor (2:3-4), embrace downward mobility.
+                    </p>
+                    <p class="lang-ko">
+                        그리스도는 "자기를 비우셨습니다"(ἐκένωσεν, 2:7)—신성이 아니라 지위. 공동체를 위한 모델: 
+                        명예 경쟁 중단(2:3-4), 하향 이동 수용.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🎯 Press On (Goal-Oriented)</h4>
+                    <h4 class="lang-ko">🎯 힘써 나아감 (목표 지향적)</h4>
+                    <p class="lang-en">
+                        Paul's résumé = "rubbish" (σκύβαλα, 3:8) compared to knowing Christ. "Press on toward the goal" (3:12-14)—
+                        forward motion, not arrival.
+                    </p>
+                    <p class="lang-ko">
+                        바울의 이력서 = "배설물"(σκύβαλα, 3:8) 그리스도를 아는 것에 비하면. "목표를 향해 나아감"(3:12-14)—
+                        도착이 아닌 전진.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">⚠️ Warning Against "Dogs"</h4>
+                    <h4 class="lang-ko">⚠️ "개들"에 대한 경고</h4>
+                    <p class="lang-en">
+                        "Beware the dogs" (3:2)—circumcision party insisting on Torah observance. Paul's sharp rhetoric: 
+                        they're "mutilators of the flesh" (κατατομή, 3:2).
+                    </p>
+                    <p class="lang-ko">
+                        "개들을 삼가라"(3:2)—토라 준수를 주장하는 할례파. 바울의 날카로운 수사: 
+                        그들은 "육체를 훼손하는 자들"(κατατομή, 3:2).
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">✝️ Cruciform Community</h4>
+                    <h4 class="lang-ko">✝️ 십자가형 공동체</h4>
+                    <p class="lang-en">
+                        Community imitates Christ's cross-shaped life: humility (2:3), concern for others (2:4), obedience to death (2:8). 
+                        Euodia and Syntyche called to reconcile (4:2-3).
+                    </p>
+                    <p class="lang-ko">
+                        공동체는 그리스도의 십자가형 삶을 모방: 겸손(2:3), 다른 이들에 대한 관심(2:4), 죽기까지 순종(2:8). 
+                        유오디아와 순두게는 화해하라고 부름받음(4:2-3).
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">3. Quiz: Test Your Understanding</h3>
+            <h3 class="lang-ko">3. 퀴즈: 이해도 점검</h3>
+
+            <div class="quiz-container" id="quiz-philippians">
+                <!-- Quiz questions will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- COLOSSIANS SECTION -->
+        <section id="colossians" class="content-section hidden">
+            <h2 class="lang-en">Colossians: Christ Above All Powers</h2>
+            <h2 class="lang-ko">골로새서: 모든 권세 위에 계신 그리스도</h2>
+
+            <h3 class="lang-en">1. Pre-Exegetical Contexts</h3>
+            <h3 class="lang-ko">1. 전(前)주해적 맥락</h3>
+
+            <div class="context-grid">
+                <div class="context-card">
+                    <h4 class="lang-en">📅 Historical Context</h4>
+                    <h4 class="lang-ko">📅 역사적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Date:</strong> ca. 60-62 CE (if by Paul) or 70-80 CE (if deutero-Pauline)<br>
+                        <strong>Authorship:</strong> Disputed—Brown, Ehrman place in "Deutero-Pauline" category; Carson/Moo defend Pauline<br>
+                        <strong>Occasion:</strong> Colossian church threatened by local "philosophy" (2:8) mixing Jewish asceticism, 
+                        angel veneration, and cosmic speculation. Epaphras brought news to Paul (1:7-8).
+                    </p>
+                    <p class="lang-ko">
+                        <strong>연대:</strong> 주후 60-62년경(바울이 저자인 경우) 또는 70-80년경(제2 바울학파인 경우)<br>
+                        <strong>저자:</strong> 논쟁—브라운, 어만은 "제2 바울학파" 범주로 분류; 카슨/무는 바울 저자 옹호<br>
+                        <strong>계기:</strong> 골로새 교회가 유대 금욕주의, 천사 숭배, 우주 사변을 섞은 지역 "철학"(2:8)의 위협을 받음. 
+                        에바브라가 바울에게 소식을 전함(1:7-8).
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">📖 Literary Context</h4>
+                    <h4 class="lang-ko">📖 문학적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Genre:</strong> Polemical letter addressing specific heresy<br>
+                        <strong>Structure:</strong> 1:1-14 (thanksgiving), 1:15-23 (Christological hymn), 1:24-2:5 (Paul's ministry), 
+                        2:6-23 (polemic against "philosophy"), 3:1-4:6 (new creation ethics), 4:7-18 (greetings)<br>
+                        <strong>Key Feature:</strong> Col 1:15-20 hymn parallels Phil 2:6-11 but emphasizes cosmic reconciliation
+                    </p>
+                    <p class="lang-ko">
+                        <strong>장르:</strong> 특정 이단을 다루는 논쟁적 서신<br>
+                        <strong>구조:</strong> 1:1-14(감사), 1:15-23(기독론 찬가), 1:24-2:5(바울의 사역), 
+                        2:6-23("철학"에 대한 논쟁), 3:1-4:6(새 창조 윤리), 4:7-18(인사)<br>
+                        <strong>주요 특징:</strong> 골 1:15-20 찬가는 빌 2:6-11과 유사하지만 우주적 화해를 강조
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">🏛️ Cultural Context</h4>
+                    <h4 class="lang-ko">🏛️ 문화적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Colossae:</strong> Small city in Lycus Valley (with Laodicea, Hierapolis), intersection of Jewish, 
+                        Greek, Phrygian religious traditions. Not visited by Paul personally (2:1).<br>
+                        <strong>"Philosophy" Background:</strong> Likely syncretism: Jewish food laws (2:16), angel worship (2:18), 
+                        "elemental spirits" (στοιχεῖα, 2:8, 20)—cosmic forces controlling fate.<br>
+                        <strong>Keener's Insight:</strong> "Thrones, dominions, rulers" (1:16) = both spiritual and political powers in Roman worldview
+                    </p>
+                    <p class="lang-ko">
+                        <strong>골로새:</strong> 리쿠스 계곡의 작은 도시(라오디게아, 히에라폴리스와 함께), 유대, 그리스, 
+                        프리기아 종교 전통의 교차점. 바울이 직접 방문하지 않음(2:1).<br>
+                        <strong>"철학" 배경:</strong> 혼합주의일 가능성: 유대 음식법(2:16), 천사 숭배(2:18), 
+                        "초등학문"(στοιχεῖα, 2:8, 20)—운명을 통제하는 우주적 세력들.<br>
+                        <strong>키너의 통찰:</strong> "보좌들, 주권들, 통치자들"(1:16) = 로마 세계관에서 영적이고 정치적인 권세 모두
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">2. Key Text and Comprehensive Themes</h3>
+            <h3 class="lang-ko">2. 핵심 본문과 포괄적 주제</h3>
+
+            <div class="key-text">
+                <div class="verse lang-en">
+                    <strong>Colossians 1:15-18</strong><br>
+                    "He is the <strong>image of the invisible God</strong>, the <strong>firstborn of all creation</strong>. 
+                    For by him all things were created, in heaven and on earth, visible and invisible, whether <strong>thrones or 
+                    dominions or rulers or authorities</strong>—all things were created through him and for him. And he is before 
+                    all things, and in him all things hold together. And he is the <strong>head of the body, the church</strong>."
+                </div>
+                <div class="verse lang-ko">
+                    <strong>골로새서 1:15-18</strong><br>
+                    "그는 <strong>보이지 아니하는 하나님의 형상</strong>이시요 <strong>모든 피조물보다 먼저 나신 이</strong>시니 
+                    만물이 그에게서 창조되되 하늘과 땅에서 보이는 것들과 보이지 않는 것들과 혹은 <strong>보좌들이나 주권들이나 
+                    통치자들이나 권세들이나</strong> 만물이 다 그로 말미암고 그를 위하여 창조되었고 또한 그가 만물보다 먼저 
+                    계시고 만물이 그 안에 함께 섰느니라 그는 <strong>몸인 교회의 머리</strong>시라."
+                </div>
+                <span class="reference">ESV / 개역개정</span>
+            </div>
+
+            <div class="scholar-box">
+                <strong class="lang-en">Ehrman's Historical Note</strong>
+                <strong class="lang-ko">어만의 역사적 주석</strong>
+                <p class="lang-en">
+                    "The Colossian 'philosophy' reflects anxieties of the 1st-century Roman world: <strong>How do we navigate 
+                    cosmic forces beyond our control?</strong> Paul's (or his disciple's) answer: Christ is not one power among many—
+                    he is the <strong>creator and reconciler of ALL powers</strong> (1:16, 20). This is pastoral care through Christology."
+                </p>
+                <p class="lang-ko">
+                    "골로새의 '철학'은 1세기 로마 세계의 불안을 반영합니다: <strong>우리 통제 밖의 우주적 세력들을 어떻게 
+                    헤쳐나갈까?</strong> 바울의(또는 그의 제자의) 대답: 그리스도는 여러 권세 중 하나가 아니라—
+                    그는 <strong>모든 권세의 창조자이자 화해자</strong>입니다(1:16, 20). 이것은 기독론을 통한 목회적 돌봄입니다."
+                </p>
+            </div>
+
+            <h4 class="lang-en">Core Themes</h4>
+            <h4 class="lang-ko">핵심 주제</h4>
+
+            <div class="theme-grid">
+                <div class="theme-card">
+                    <h4 class="lang-en">👑 Christ's Supremacy</h4>
+                    <h4 class="lang-ko">👑 그리스도의 우월성</h4>
+                    <p class="lang-en">
+                        Christ is "firstborn" (πρωτότοκος, 1:15)—not first created, but supreme over creation. "All things" 
+                        created through/for him (1:16). He sustains all (1:17).
+                    </p>
+                    <p class="lang-ko">
+                        그리스도는 "먼저 나신 이"(πρωτότοκος, 1:15)—첫 번째로 창조된 것이 아니라 창조에 대한 우월성. 
+                        "만물"이 그를 통해/그를 위해 창조됨(1:16). 그가 만물을 붙들고 계심(1:17).
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🌐 Cosmic Reconciliation</h4>
+                    <h4 class="lang-ko">🌐 우주적 화해</h4>
+                    <p class="lang-en">
+                        "Through him to reconcile ALL things (τὰ πάντα) to himself, whether on earth or in heaven" (1:20). 
+                        Not just humanity—entire cosmos under Christ's peace.
+                    </p>
+                    <p class="lang-ko">
+                        "그로 말미암아 만물(τὰ πάντα)을 자기와 화목하게 하시되 땅에 있는 것들이나 하늘에 있는 것들이나"(1:20). 
+                        인류만이 아니라—전체 우주가 그리스도의 평화 아래.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">💎 Fullness in Christ</h4>
+                    <h4 class="lang-ko">💎 그리스도 안의 충만</h4>
+                    <p class="lang-en">
+                        "In him all the fullness (πλήρωμα) of God was pleased to dwell" (1:19). "In him the whole fullness of deity 
+                        dwells bodily" (2:9). You have "fullness in him" (2:10)—don't seek elsewhere!
+                    </p>
+                    <p class="lang-ko">
+                        "그 안에는 하나님의 모든 충만(πλήρωμα)이 기뻐 거하시고"(1:19). "그 안에는 신성의 모든 충만이 
+                        육체로 거하시고"(2:9). 너희가 "그 안에서 충만하였으니"(2:10)—다른 곳에서 찾지 말라!
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">⚔️ Powers Disarmed</h4>
+                    <h4 class="lang-ko">⚔️ 권세들의 무장해제</h4>
+                    <p class="lang-en">
+                        Christ "disarmed the rulers and authorities" (ἀπεκδυσάμενος, 2:15), making public spectacle in his triumph. 
+                        Cross = victory parade over defeated powers.
+                    </p>
+                    <p class="lang-ko">
+                        그리스도께서 "통치자들과 권세들을 무장해제하시고"(ἀπεκδυσάμενος, 2:15), 그의 개선 행렬에서 공개적 
+                        구경거리로 만드심. 십자가 = 패배한 권세들에 대한 승리 행진.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🚫 Reject False Teaching</h4>
+                    <h4 class="lang-ko">🚫 거짓 가르침 거부</h4>
+                    <p class="lang-en">
+                        "See to it that no one takes you captive by philosophy (διὰ τῆς φιλοσοφίας) and empty deceit" (2:8). 
+                        Don't submit to "elemental spirits" (στοιχεῖα, 2:20) or "worship of angels" (2:18).
+                    </p>
+                    <p class="lang-ko">
+                        "누가 철학(διὰ τῆς φιλοσοφίας)과 헛된 속임수로 너희를 사로잡을까 주의하라"(2:8). 
+                        "초등학문"(στοιχεῖα, 2:20)이나 "천사 숭배"(2:18)에 복종하지 말라.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🌱 New Creation Ethics</h4>
+                    <h4 class="lang-ko">🌱 새 창조 윤리</h4>
+                    <p class="lang-en">
+                        "Put to death...immorality, impurity" (3:5). "Put on...compassion, kindness, humility" (3:12). 
+                        "Here there is not Greek and Jew...slave or free, but Christ is all, and in all" (3:11).
+                    </p>
+                    <p class="lang-ko">
+                        "죽이라...음행, 부정"(3:5). "입으라...긍휼, 자비, 겸손"(3:12). 
+                        "거기에는 헬라인이나 유대인이나...종이나 자유인이 차별이 없이 오직 그리스도는 만유시요 만유 안에 계시니라"(3:11).
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">3. Quiz: Test Your Understanding</h3>
+            <h3 class="lang-ko">3. 퀴즈: 이해도 점검</h3>
+
+            <div class="quiz-container" id="quiz-colossians">
+                <!-- Quiz questions will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- PHILEMON SECTION -->
+        <section id="philemon" class="content-section hidden">
+            <h2 class="lang-en">Philemon: Reconciliation Enacted</h2>
+            <h2 class="lang-ko">빌레몬서: 실행된 화해</h2>
+
+            <h3 class="lang-en">1. Pre-Exegetical Contexts</h3>
+            <h3 class="lang-ko">1. 전(前)주해적 맥락</h3>
+
+            <div class="context-grid">
+                <div class="context-card">
+                    <h4 class="lang-en">📅 Historical Context</h4>
+                    <h4 class="lang-ko">📅 역사적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Date:</strong> ca. 60-62 CE (Rome) or 54-56 CE (Ephesus)<br>
+                        <strong>Authorship:</strong> Undisputed Pauline—all five scholars agree<br>
+                        <strong>Occasion:</strong> Onesimus, enslaved person owned by Philemon, fled to Paul (possibly after theft, v. 18). 
+                        Onesimus converted under Paul's ministry (v. 10). Paul sends him back with this letter, asking Philemon to 
+                        receive him "no longer as slave, but as brother" (vv. 15-16).
+                    </p>
+                    <p class="lang-ko">
+                        <strong>연대:</strong> 주후 60-62년경(로마) 또는 54-56년경(에베소)<br>
+                        <strong>저자:</strong> 논쟁 없는 바울 서신—5명의 학자 모두 동의<br>
+                        <strong>계기:</strong> 빌레몬이 소유한 노예 오네시모가 바울에게 도망침(아마도 절도 후, 18절). 
+                        오네시모는 바울의 사역 아래 개종함(10절). 바울은 그를 이 편지와 함께 돌려보내며, 빌레몬에게 
+                        그를 "이제는 종으로 보지 말고 형제로" 받으라고 요청함(15-16절).
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">📖 Literary Context</h4>
+                    <h4 class="lang-ko">📖 문학적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Genre:</strong> Personal letter of recommendation + appeal<br>
+                        <strong>Structure:</strong> vv. 1-7 (greeting, thanksgiving), vv. 8-16 (appeal for Onesimus), 
+                        vv. 17-21 (Paul's substitutionary offer), vv. 22-25 (travel plans, greetings)<br>
+                        <strong>Rhetorical Strategy:</strong> Paul appeals (παρακαλῶ, v. 9) rather than commands (ἐπιτάσσειν, v. 8), 
+                        creating moral pressure without legal force
+                    </p>
+                    <p class="lang-ko">
+                        <strong>장르:</strong> 개인적 추천서 + 호소<br>
+                        <strong>구조:</strong> 1-7절(인사, 감사), 8-16절(오네시모를 위한 호소), 
+                        17-21절(바울의 대속적 제안), 22-25절(여행 계획, 인사)<br>
+                        <strong>수사적 전략:</strong> 바울은 명령(ἐπιτάσσειν, 8절)하기보다 호소(παρακαλῶ, 9절)하여, 
+                        법적 강제 없이 도덕적 압력을 만듦
+                    </p>
+                </div>
+
+                <div class="context-card">
+                    <h4 class="lang-en">🏛️ Cultural Context</h4>
+                    <h4 class="lang-ko">🏛️ 문화적 맥락</h4>
+                    <p class="lang-en">
+                        <strong>Roman Slavery:</strong> 1 in 3 urban residents enslaved. Slaves = legal property (res, not persona). 
+                        Fugitive slave faced branding, torture, crucifixion. Manumission required master's consent or purchase price.<br>
+                        <strong>Keener's Insight:</strong> Paul's wordplay—Onesimus (Ὀνήσιμος = "useful") was "useless" (ἄχρηστον), 
+                        now "useful" (εὔχρηστον, v. 11)—subtle pressure on Philemon.<br>
+                        <strong>Brown's Caution:</strong> "Paul does NOT call for abolition. But by inserting 'brother' into master-slave 
+                        relationship, he plants a Christological time bomb."
+                    </p>
+                    <p class="lang-ko">
+                        <strong>로마 노예제:</strong> 도시 거주자 3명 중 1명이 노예. 노예 = 법적 재산(res, persona가 아님). 
+                        도망 노예는 낙인, 고문, 십자가형을 당함. 해방은 주인의 동의나 구매 가격 필요.<br>
+                        <strong>키너의 통찰:</strong> 바울의 언어유희—오네시모(Ὀνήσιμος = "유익한")는 "무익했으나"(ἄχρηστον), 
+                        이제 "유익하다"(εὔχρηστον, 11절)—빌레몬에 대한 미묘한 압력.<br>
+                        <strong>브라운의 주의:</strong> "바울은 폐지를 요구하지 않습니다. 그러나 주인-노예 관계에 '형제'를 
+                        삽입함으로써, 그는 기독론적 시한폭탄을 심습니다."
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">2. Key Text and Comprehensive Themes</h3>
+            <h3 class="lang-ko">2. 핵심 본문과 포괄적 주제</h3>
+
+            <div class="key-text">
+                <div class="verse lang-en">
+                    <strong>Philemon 15-16, 18</strong><br>
+                    "For this perhaps is why he was parted from you for a while, that you might have him back forever, 
+                    <strong>no longer as a bondservant but more than a bondservant, as a beloved brother</strong>—especially to me, 
+                    but how much more to you, both in the flesh and in the Lord...If he has wronged you at all, or owes you anything, 
+                    <strong>charge that to my account</strong>."
+                </div>
+                <div class="verse lang-ko">
+                    <strong>빌레몬서 15-16, 18</strong><br>
+                    "그가 잠시 떠나게 된 것은 영원히 그를 두게 함이니 <strong>이 후로는 종과 같이 대하지 아니하고 
+                    종 이상으로 곧 사랑 받는 형제</strong>로 둘 자라 내게 특별히 그러하거든 하물며 육신과 주 안에서 
+                    상관된 네게랴...그가 만일 네게 불의를 하였거나 네게 빚진 것이 있으면 <strong>이것을 내 앞으로 
+                    계산하라</strong>."
+                </div>
+                <span class="reference">ESV / 개역개정</span>
+            </div>
+
+            <div class="scholar-box">
+                <strong class="lang-en">Thielman's Theological Reading</strong>
+                <strong class="lang-ko">틸만의 신학적 읽기</strong>
+                <p class="lang-en">
+                    "Philemon enacts the gospel's <strong>spatial reconfiguration</strong>. Onesimus' physical journey 
+                    (Colossae → Rome/Ephesus → Colossae) maps onto <strong>spiritual journey</strong> (slave → Christian → brother). 
+                    Paul's 'charge it to me' (v. 18) is <strong>substitutionary atonement</strong> in social form—he absorbs Onesimus' 
+                    debt, just as Christ absorbed ours."
+                </p>
+                <p class="lang-ko">
+                    "빌레몬서는 복음의 <strong>공간적 재구성</strong>을 실행합니다. 오네시모의 물리적 여정
+                    (골로새 → 로마/에베소 → 골로새)은 <strong>영적 여정</strong>(종 → 그리스도인 → 형제)에 매핑됩니다. 
+                    바울의 '내 앞으로 계산하라'(18절)는 사회적 형태의 <strong>대속적 속죄</strong>입니다—그는 오네시모의 
+                    빚을 흡수하며, 그리스도께서 우리의 빚을 흡수하신 것과 같습니다."
+                </p>
+            </div>
+
+            <h4 class="lang-en">Core Themes</h4>
+            <h4 class="lang-ko">핵심 주제</h4>
+
+            <div class="theme-grid">
+                <div class="theme-card">
+                    <h4 class="lang-en">👥 Brother, Not Slave</h4>
+                    <h4 class="lang-ko">👥 형제, 종이 아님</h4>
+                    <p class="lang-en">
+                        Central transformation: Onesimus = ἀδελφός (brother, v. 16), not δοῦλος (slave). "In the flesh and in the Lord" 
+                        (v. 16)—both social and spiritual reconfiguration.
+                    </p>
+                    <p class="lang-ko">
+                        중심적 변화: 오네시모 = ἀδελφός (형제, 16절), δοῦλος (종)가 아님. "육신과 주 안에서"
+                        (16절)—사회적이고 영적인 재구성 모두.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">💰 Substitutionary Solidarity</h4>
+                    <h4 class="lang-ko">💰 대속적 연대</h4>
+                    <p class="lang-en">
+                        "Charge that to my account" (λόγει τοῦτο ἐμοί, v. 18)—Paul takes Onesimus' debt. 
+                        Echoes Christ's substitution: "He himself bore our sins" (1 Pet 2:24).
+                    </p>
+                    <p class="lang-ko">
+                        "이것을 내 앞으로 계산하라"(λόγει τοῦτο ἐμοί, 18절)—바울이 오네시모의 빚을 짐. 
+                        그리스도의 대속을 반영: "그가 친히 우리 죄를 지셨으니"(벧전 2:24).
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🕊️ Voluntary Love > Legal Right</h4>
+                    <h4 class="lang-ko">🕊️ 자발적 사랑 > 법적 권리</h4>
+                    <p class="lang-en">
+                        Paul COULD command (ἐπιτάσσειν, v. 8) but appeals (παρακαλῶ, v. 9) "for love's sake." 
+                        Goal: voluntary response, not coerced compliance (v. 14).
+                    </p>
+                    <p class="lang-ko">
+                        바울은 명령할 수 있지만(ἐπιτάσσειν, 8절) "사랑을 위하여" 호소합니다(παρακαλῶ, 9절). 
+                        목표: 강요된 순종이 아닌 자발적 반응(14절).
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🤝 Partnership Language</h4>
+                    <h4 class="lang-ko">🤝 동역 언어</h4>
+                    <p class="lang-en">
+                        "If you consider me your partner (κοινωνόν)" (v. 17)—horizontal relationship, not patron-client. 
+                        Echoes Philippians 1:5 (κοινωνία).
+                    </p>
+                    <p class="lang-ko">
+                        "네가 나를 동역자(κοινωνόν)로 알진대"(17절)—후원자-의뢰인이 아닌 수평적 관계. 
+                        빌립보서 1:5(κοινωνία)를 반향.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">🔄 The "More Than I Say" Puzzle</h4>
+                    <h4 class="lang-ko">🔄 "내가 말한 것보다 더" 수수께끼</h4>
+                    <p class="lang-en">
+                        "Confident...you will do even more than I say" (v. 21). Scholars debate: Does Paul expect 
+                        <strong>manumission</strong> (freeing Onesimus)? The letter creates pressure without explicit demand.
+                    </p>
+                    <p class="lang-ko">
+                        "네가...내가 말한 것보다 더 행할 줄 확신하노라"(21절). 학자들 논쟁: 바울이 
+                        <strong>해방</strong>(오네시모를 자유롭게 함)을 기대하는가? 서신은 명시적 요구 없이 압력을 만듦.
+                    </p>
+                </div>
+
+                <div class="theme-card">
+                    <h4 class="lang-en">⚠️ Historical Misuse Warning</h4>
+                    <h4 class="lang-ko">⚠️ 역사적 오용 경고</h4>
+                    <p class="lang-en">
+                        This letter was weaponized to justify Christian slaveholding for 1,800+ years. 
+                        <strong>Emic read</strong>: Paul subverts ontology ("brother," not essence-slave). 
+                        <strong>Etic caution</strong>: Trajectory is liberation, even if tactic was incremental.
+                    </p>
+                    <p class="lang-ko">
+                        이 서신은 1,800년 이상 기독교 노예 소유를 정당화하는 데 무기화되었습니다. 
+                        <strong>에믹 읽기</strong>: 바울은 존재론을 전복("형제," 본질-노예가 아님). 
+                        <strong>에틱 주의</strong>: 전술이 점진적이었더라도 궤적은 해방입니다.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="lang-en">3. Quiz: Test Your Understanding</h3>
+            <h3 class="lang-ko">3. 퀴즈: 이해도 점검</h3>
+
+            <div class="quiz-container" id="quiz-philemon">
+                <!-- Quiz questions will be generated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Quiz Data
+        const quizData = {
+            ephesians: {
+                en: [
+                    {
+                        question: "According to Raymond Brown and scholarly consensus, what is the primary authorship debate surrounding Ephesians?",
+                        options: [
+                            "Whether it was written before or after Paul's martyrdom",
+                            "Whether it was written by Paul himself or by a Pauline disciple in the deutero-Pauline tradition",
+                            "Whether it was originally addressed to Ephesus or Rome",
+                            "Whether Tychicus or Timothy was the primary author"
+                        ],
+                        correct: 1,
+                        explanation: "Brown places Ephesians in the 'Deutero-Pauline' category due to unique vocabulary (80+ words not found elsewhere in Paul), liturgical style, and developed ecclesiology. However, he affirms its canonical authority regardless of authorship."
+                    },
+                    {
+                        question: "What is the central theological claim of Ephesians 3:10-11?",
+                        options: [
+                            "The church will eventually defeat all earthly rulers and authorities",
+                            "Through the church, God's wisdom is made known to cosmic rulers and authorities",
+                            "Paul's imprisonment demonstrates God's power over political authorities",
+                            "Angels and demons are learning about salvation through human prophets"
+                        ],
+                        correct: 1,
+                        explanation: "Ephesians 3:10-11 states that 'through the church the manifold wisdom of God might now be made known to the rulers and authorities in the heavenly places.' Thielman notes the church ITSELF is God's apocalyptic revelation—not a future event but present reality."
+                    },
+                    {
+                        question: "According to Craig Keener's cultural analysis, how should we understand the 'household codes' in Ephesians 5:21-6:9?",
+                        options: [
+                            "As timeless blueprints for all Christian families across all cultures",
+                            "As temporary accommodations that Christians should now completely reject",
+                            "As radical reconfigurations of Roman patriarchy beginning with 'mutual submission' (5:21)",
+                            "As evidence that Paul supported Roman slavery and gender hierarchy"
+                        ],
+                        correct: 2,
+                        explanation: "Keener emphasizes that 'Submit to one another' (5:21) precedes all specific instructions, making mutual submission the framework. This was radical in Roman patriarchal culture. The letter contains a 'Christological time bomb' that plants seeds of liberation."
+                    },
+                    {
+                        question: "What does the Greek phrase 'ἐν τοῖς ἐπουρανίοις' (en tois epouraniois) signify in Ephesians' theology?",
+                        options: [
+                            "The physical location of heaven where believers will go after death",
+                            "The heavenly places where believers are currently seated with Christ (2:6)",
+                            "The location of God's throne in the third heaven",
+                            "A metaphor for spiritual maturity"
+                        ],
+                        correct: 1,
+                        explanation: "The phrase 'in the heavenly places' appears 5 times in Ephesians (1:3, 20; 2:6; 3:10; 6:12). Crucially, believers are ALREADY 'seated...in the heavenly places in Christ Jesus' (2:6)—present reality, not future hope. This is the spatial-relational core of Ephesian ecclesiology."
+                    },
+                    {
+                        question: "What is the 'mystery' (μυστήριον) revealed in Ephesians 3:3-6, according to Brown and Thielman?",
+                        options: [
+                            "The secret knowledge of how to achieve salvation through good works",
+                            "The hidden plan that Gentiles are co-heirs, co-members, and co-sharers with Jews in Christ",
+                            "The date of Christ's return",
+                            "The true identity of the Antichrist"
+                        ],
+                        correct: 1,
+                        explanation: "The 'mystery' hidden for ages is that 'the Gentiles are fellow heirs, members of the same body, and partakers of the promise in Christ Jesus' (3:6). Thielman notes: Every time Jew and Gentile eat together, the mystery is DISPLAYED—the church enacts cosmic reconciliation."
+                    }
+                ],
+                ko: [
+                    {
+                        question: "레이몬드 브라운과 학계 합의에 따르면, 에베소서를 둘러싼 주요 저작권 논쟁은 무엇입니까?",
+                        options: [
+                            "바울의 순교 전후에 쓰였는지 여부",
+                            "바울 자신이 쓴 것인지 제2 바울학파 전통의 바울 제자가 쓴 것인지 여부",
+                            "원래 에베소나 로마로 보내진 것인지 여부",
+                            "두기고나 디모데가 주요 저자인지 여부"
+                        ],
+                        correct: 1,
+                        explanation: "브라운은 에베소서를 고유 어휘(바울의 다른 곳에서 발견되지 않는 80개 이상의 단어), 전례적 문체, 발전된 교회론으로 인해 '제2 바울학파' 범주에 둡니다. 그러나 그는 저작권과 관계없이 정경적 권위를 인정합니다."
+                    },
+                    {
+                        question: "에베소서 3:10-11의 중심 신학적 주장은 무엇입니까?",
+                        options: [
+                            "교회가 결국 모든 지상의 통치자들과 권세들을 패배시킬 것이다",
+                            "교회를 통해 하나님의 지혜가 우주적 통치자들과 권세들에게 알려진다",
+                            "바울의 투옥은 정치적 권위에 대한 하나님의 능력을 보여준다",
+                            "천사들과 악마들이 인간 선지자들을 통해 구원에 대해 배우고 있다"
+                        ],
+                        correct: 1,
+                        explanation: "에베소서 3:10-11은 '교회로 말미암아 하늘에 있는 통치자들과 권세들에게 하나님의 각종 지혜를 알게 하려 하심'이라고 말합니다. 틸만은 교회 자체가 하나님의 묵시적 계시라고 주목합니다—미래의 사건이 아니라 현재의 실재."
+                    },
+                    {
+                        question: "크레이그 키너의 문화 분석에 따르면, 에베소서 5:21-6:9의 '가정 규범'을 어떻게 이해해야 합니까?",
+                        options: [
+                            "모든 문화의 모든 기독교 가정을 위한 시대를 초월한 청사진으로",
+                            "기독교인들이 이제 완전히 거부해야 하는 일시적 타협으로",
+                            "'상호 복종'(5:21)으로 시작하는 로마 가부장제의 급진적 재구성으로",
+                            "바울이 로마 노예제와 성별 위계를 지지했다는 증거로"
+                        ],
+                        correct: 2,
+                        explanation: "키너는 '피차 복종하라'(5:21)가 모든 구체적 지시에 선행하여, 상호 복종을 틀로 만든다고 강조합니다. 이것은 로마 가부장적 문화에서 급진적이었습니다. 이 서신은 해방의 씨앗을 심는 '기독론적 시한폭탄'을 포함합니다."
+                    },
+                    {
+                        question: "에베소서 신학에서 그리스어 구절 'ἐν τοῖς ἐπουρανίοις'(en tois epouraniois)는 무엇을 의미합니까?",
+                        options: [
+                            "신자들이 죽은 후 갈 하늘의 물리적 위치",
+                            "신자들이 현재 그리스도와 함께 앉아 있는 하늘의 장소(2:6)",
+                            "셋째 하늘에 있는 하나님 보좌의 위치",
+                            "영적 성숙에 대한 은유"
+                        ],
+                        correct: 1,
+                        explanation: "'하늘에'라는 구절은 에베소서에 5번 나타납니다(1:3, 20; 2:6; 3:10; 6:12). 결정적으로, 신자들은 이미 '그리스도 예수 안에서...하늘에 앉히셨으니'(2:6)—미래의 희망이 아닌 현재의 실재입니다. 이것이 에베소 교회론의 공간-관계적 핵심입니다."
+                    },
+                    {
+                        question: "브라운과 틸만에 따르면, 에베소서 3:3-6에서 계시된 '신비'(μυστήριον)는 무엇입니까?",
+                        options: [
+                            "선행을 통해 구원을 얻는 방법에 대한 비밀 지식",
+                            "이방인들이 그리스도 안에서 유대인들과 함께 후사, 지체, 약속의 참여자라는 숨겨진 계획",
+                            "그리스도 재림의 날짜",
+                            "적그리스도의 진정한 정체"
+                        ],
+                        correct: 1,
+                        explanation: "만세에 감추어진 '신비'는 '이방인들이 복음으로 말미암아 그리스도 예수 안에서 함께 상속자가 되고 함께 지체가 되고 함께 약속에 참여하는 자'(3:6)라는 것입니다. 틸만은 유대인과 이방인이 함께 식사할 때마다 신비가 드러나며—교회가 우주적 화해를 실행한다고 주목합니다."
+                    }
+                ]
+            },
+            philippians: {
+                en: [
+                    {
+                        question: "What is the scholarly consensus regarding the authorship and dating of Philippians?",
+                        options: [
+                            "Deutero-Pauline, written 70-90 CE by a disciple",
+                            "Undisputed Pauline, written ca. 60-62 CE from Rome or 54-56 CE from Ephesus",
+                            "Written by Timothy under Paul's supervision",
+                            "A composite letter combining three different Pauline fragments"
+                        ],
+                        correct: 1,
+                        explanation: "All five scholars (Brown, Ehrman, Carson/Moo, Keener, Thielman) agree Philippians is authentically Pauline. The debate centers on LOCATION (Rome vs. Ephesus imprisonment), not authorship."
+                    },
+                    {
+                        question: "According to Keener's cultural analysis, what does the phrase 'form of God/form of slave' (μορφῇ θεοῦ/μορφὴν δούλου) in Philippians 2:6-7 signify?",
+                        options: [
+                            "Jesus literally changed his divine essence into human essence",
+                            "Status markers in Roman honor culture—public appearance and social standing",
+                            "Different stages of Jesus' psychological development",
+                            "Platonic forms representing ideal categories"
+                        ],
+                        correct: 1,
+                        explanation: "Keener emphasizes 'form' (μορφή) means STATUS MARKERS in Roman culture, not ontological essence. Christ stripped status symbols (like a Roman general refusing triumphal parade), not deity. This is social-political kenosis."
+                    },
+                    {
+                        question: "What is the counter-imperial significance of Philippians 2:11 ('Jesus Christ is Lord') in the context of a Roman colonia like Philippi?",
+                        options: [
+                            "It was a neutral religious statement with no political implications",
+                            "It directly challenged Caesar's claim to be 'lord' (κύριος) and 'savior' (σωτήρ)",
+                            "It referred only to Jesus' spiritual authority, not earthly matters",
+                            "It was a code word for Jewish messianic expectations"
+                        ],
+                        correct: 1,
+                        explanation: "In Roman colonies, Caesar was acclaimed 'lord' (κύριος) and 'savior' (σωτήρ). 'Jesus is Lord' (Phil 2:11) was a direct counter-imperial claim. Philippi, as a Roman colonia with strong emperor loyalty, would have heard this as politically subversive."
+                    },
+                    {
+                        question: "According to Carson/Moo, what is Paul's hermeneutical move in placing the Christological hymn (Phil 2:6-11) in its letter context?",
+                        options: [
+                            "He quotes it merely for doctrinal instruction with no ethical application",
+                            "He uses it to demonstrate his theological sophistication",
+                            "He commands imitation: 'Have this mind' (2:5)—the pattern is for communal formation",
+                            "He argues for Jesus' pre-existence to refute adoptionist heresy"
+                        ],
+                        correct: 2,
+                        explanation: "Carson/Moo emphasize Paul's genius: the hymn traces Christ's descent and ascent, then Paul says 'Have this mind among yourselves' (2:5). NOT just admiration but IMITATION IN COMMUNITY—stop competing for status (2:3-4), embrace cruciform pattern."
+                    },
+                    {
+                        question: "How does the theme of 'joy' (χαρά) function in Philippians according to Thielman's narrative theology?",
+                        options: [
+                            "As an emotional state dependent on favorable circumstances",
+                            "As a Christological reality—joy flows from knowing Christ, independent of suffering or success",
+                            "As a spiritual gift only mature Christians experience",
+                            "As a command to suppress negative emotions"
+                        ],
+                        correct: 1,
+                        explanation: "Thielman notes 'rejoice' appears 16 times in Philippians. Joy is NOT circumstantial (Paul is imprisoned!) but CHRISTOLOGICAL—rooted in 'knowing Christ' (3:8-10). Paul's chains = gospel advance (1:12-14). Joy transcends circumstances because it's grounded in Christ's lordship."
+                    }
+                ],
+                ko: [
+                    {
+                        question: "빌립보서의 저작권과 연대에 관한 학계 합의는 무엇입니까?",
+                        options: [
+                            "제2 바울학파, 제자가 주후 70-90년에 씀",
+                            "논쟁 없는 바울 서신, 주후 60-62년경 로마에서 또는 54-56년경 에베소에서 씀",
+                            "디모데가 바울의 감독 아래 씀",
+                            "세 가지 다른 바울 단편을 결합한 합성 서신"
+                        ],
+                        correct: 1,
+                        explanation: "5명의 학자 모두(브라운, 어만, 카슨/무, 키너, 틸만) 빌립보서가 진정한 바울 서신임에 동의합니다. 논쟁은 저작권이 아니라 장소(로마 대 에베소 수감)에 집중됩니다."
+                    },
+                    {
+                        question: "키너의 문화 분석에 따르면, 빌립보서 2:6-7의 '하나님의 본체/종의 형체'(μορφῇ θεοῦ/μορφὴν δούλου) 구절은 무엇을 의미합니까?",
+                        options: [
+                            "예수께서 문자 그대로 신적 본질을 인간 본질로 변화시키셨다",
+                            "로마 명예 문화의 지위 표지—공적 모습과 사회적 지위",
+                            "예수의 심리적 발달의 다른 단계들",
+                            "이상적 범주를 나타내는 플라톤적 형상들"
+                        ],
+                        correct: 1,
+                        explanation: "키너는 '형상'(μορφή)이 존재론적 본질이 아니라 로마 문화의 지위 표지를 의미한다고 강조합니다. 그리스도께서 지위 상징을 벗으셨습니다(로마 장군이 개선 행렬을 거부하는 것처럼), 신성이 아니라. 이것은 사회-정치적 케노시스입니다."
+                    },
+                    {
+                        question: "빌립보와 같은 로마 식민지 맥락에서 빌립보서 2:11('예수 그리스도는 주시라')의 반제국적 의미는 무엇입니까?",
+                        options: [
+                            "정치적 함의가 없는 중립적인 종교적 진술이었다",
+                            "카이사르의 '주'(κύριος)와 '구원자'(σωτήρ) 주장에 직접 도전했다",
+                            "세상 문제가 아닌 예수의 영적 권위만을 언급했다",
+                            "유대 메시아적 기대에 대한 암호였다"
+                        ],
+                        correct: 1,
+                        explanation: "로마 식민지에서 카이사르는 '주'(κύριος)와 '구원자'(σωτήρ)로 환호받았습니다. '예수는 주시라'(빌 2:11)는 직접적인 반제국적 주장이었습니다. 강한 황제 충성을 가진 로마 식민지 빌립보는 이것을 정치적으로 전복적인 것으로 들었을 것입니다."
+                    },
+                    {
+                        question: "카슨/무에 따르면, 바울이 기독론 찬가(빌 2:6-11)를 서신 맥락에 배치한 해석학적 움직임은 무엇입니까?",
+                        options: [
+                            "윤리적 적용 없이 단순히 교리적 교육을 위해 인용했다",
+                            "자신의 신학적 정교함을 보여주기 위해 사용했다",
+                            "모방을 명령했다: '이 마음을 품으라'(2:5)—패턴은 공동체 형성을 위한 것이다",
+                            "양자론 이단을 논박하기 위해 예수의 선재를 주장했다"
+                        ],
+                        correct: 2,
+                        explanation: "카슨/무는 바울의 천재성을 강조합니다: 찬가는 그리스도의 하강과 상승을 추적하고, 그런 다음 바울은 '너희 안에 이 마음을 품으라'(2:5)고 말합니다. 단순한 감탄이 아니라 공동체 안에서의 모방—지위 경쟁 중단(2:3-4), 십자가형 패턴 수용."
+                    },
+                    {
+                        question: "틸만의 내러티브 신학에 따르면, '기쁨'(χαρά) 주제는 빌립보서에서 어떻게 기능합니까?",
+                        options: [
+                            "유리한 상황에 의존하는 감정 상태로",
+                            "기독론적 실재로—기쁨은 그리스도를 아는 것에서 흘러나와, 고난이나 성공과 무관하다",
+                            "성숙한 기독교인만 경험하는 영적 은사로",
+                            "부정적 감정을 억압하라는 명령으로"
+                        ],
+                        correct: 1,
+                        explanation: "틸만은 '기뻐하라'가 빌립보서에 16번 나타난다고 주목합니다. 기쁨은 상황적(바울은 투옥되어 있습니다!)이 아니라 기독론적입니다—'그리스도를 아는 것'(3:8-10)에 뿌리를 둡니다. 바울의 사슬 = 복음 전진(1:12-14). 기쁨은 그리스도의 주권에 근거하기 때문에 상황을 초월합니다."
+                    }
+                ]
+            },
+            colossians: {
+                en: [
+                    {
+                        question: "What is the scholarly debate regarding Colossians' authorship, and what are the key factors?",
+                        options: [
+                            "All scholars agree it's by Paul; debate is only about dating",
+                            "Brown/Ehrman place it in 'Deutero-Pauline' due to vocabulary and developed Christology; Carson/Moo defend Pauline authorship",
+                            "It's unanimously considered pseudepigraphal",
+                            "The letter is a modern forgery discovered in the 19th century"
+                        ],
+                        correct: 1,
+                        explanation: "Brown and Ehrman cite unique vocabulary, long sentence structures, and highly developed Christology as evidence for deutero-Pauline authorship. Carson/Moo counter that new situations (Colossian heresy) required new language, and secretary hypothesis explains style differences."
+                    },
+                    {
+                        question: "According to Ehrman's historical reconstruction, what was the 'Colossian philosophy' (2:8) that Paul/the author addressed?",
+                        options: [
+                            "Pure Gnostic dualism teaching that matter is evil",
+                            "Epicurean philosophy denying divine involvement in world",
+                            "Local syncretism mixing Jewish asceticism, angel veneration, and cosmic speculation about 'elemental spirits' (στοιχεῖα)",
+                            "Roman imperial cult worship"
+                        ],
+                        correct: 2,
+                        explanation: "Ehrman notes the 'philosophy' was NOT a single heresy but LOCAL SYNCRETISM: Jewish food laws/Sabbaths (2:16), angel worship (2:18), and 'elemental spirits' (στοιχεῖα, 2:8, 20)—cosmic forces believed to control human fate. Promise: 'fullness' through rituals and ascetic practices."
+                    },
+                    {
+                        question: "What is the significance of the term 'πλήρωμα' (fullness) in Colossians' Christology?",
+                        options: [
+                            "It refers to the church being filled with spiritual gifts",
+                            "All the fullness of God dwells in Christ bodily (1:19; 2:9), and believers have fullness IN CHRIST (2:10)—don't seek it elsewhere",
+                            "It describes the completion of the Old Testament law",
+                            "It means the filling of the Holy Spirit at Pentecost"
+                        ],
+                        correct: 1,
+                        explanation: "The term πλήρωμα appears 3 times: 'All the fullness was pleased to dwell in him' (1:19), 'In him the whole fullness of deity dwells bodily' (2:9), 'You have been filled (πεπληρωμένοι) in him' (2:10). Paul's polemic: the false teaching promised 'fullness'—Paul counters that fullness is ONLY in Christ."
+                    },
+                    {
+                        question: "According to Keener's cultural reading, what do 'thrones, dominions, rulers, authorities' (1:16) signify in the Greco-Roman worldview?",
+                        options: [
+                            "Purely spiritual beings with no connection to earthly reality",
+                            "Both spiritual AND political powers—no clean line in Roman world between 'religion' and 'politics'",
+                            "Only human governmental structures",
+                            "Angels in heaven with specific job descriptions"
+                        ],
+                        correct: 1,
+                        explanation: "Keener emphasizes that in the Roman world, there was NO separation of 'spiritual' and 'political.' Local governors claimed divine mandates, emperors were pontifex maximus. When Paul says Christ created/reconciled ALL powers (1:16, 20), it includes both cosmic forces AND political structures."
+                    },
+                    {
+                        question: "What does Colossians 2:15 mean by saying Christ 'disarmed (ἀπεκδυσάμενος) the rulers and authorities'?",
+                        options: [
+                            "Christ removed spiritual weapons from demons' hands",
+                            "Christ stripped the powers of their authority through the cross, making them a public spectacle in his triumphal procession",
+                            "Christ convinced angels to stop fighting against humans",
+                            "Christ destroyed all governmental authority structures"
+                        ],
+                        correct: 1,
+                        explanation: "The verb ἀπεκδυσάμενος means 'stripped' or 'disarmed.' Col 2:15 uses the image of a Roman triumphal parade where defeated enemies are paraded in shame. The CROSS (instrument of shame) becomes Christ's TRIUMPH—he disarmed cosmic powers by dying and rising, exposing their impotence."
+                    }
+                ],
+                ko: [
+                    {
+                        question: "골로새서의 저작권에 관한 학문적 논쟁과 주요 요인은 무엇입니까?",
+                        options: [
+                            "모든 학자들이 바울이 썼다는 데 동의; 논쟁은 연대에만 있다",
+                            "브라운/어만은 어휘와 발전된 기독론으로 인해 '제2 바울학파'로 분류; 카슨/무는 바울 저자를 옹호",
+                            "만장일치로 가명으로 간주된다",
+                            "19세기에 발견된 현대 위조품이다"
+                        ],
+                        correct: 1,
+                        explanation: "브라운과 어만은 고유한 어휘, 긴 문장 구조, 고도로 발전된 기독론을 제2 바울학파 저작의 증거로 인용합니다. 카슨/무는 새로운 상황(골로새 이단)이 새로운 언어를 요구했고, 서기 가설이 문체 차이를 설명한다고 반박합니다."
+                    },
+                    {
+                        question: "어만의 역사적 재구성에 따르면, 바울/저자가 다룬 '골로새 철학'(2:8)은 무엇이었습니까?",
+                        options: [
+                            "물질이 악하다고 가르치는 순수한 영지주의 이원론",
+                            "세상에 대한 신적 개입을 부정하는 에피쿠로스 철학",
+                            "유대 금욕주의, 천사 숭배, '초등학문'(στοιχεῖα)에 대한 우주 사변을 섞은 지역 혼합주의",
+                            "로마 황제 숭배"
+                        ],
+                        correct: 2,
+                        explanation: "어만은 '철학'이 단일 이단이 아니라 지역 혼합주의였다고 주목합니다: 유대 음식법/안식일(2:16), 천사 숭배(2:18), 그리고 인간 운명을 통제한다고 믿어진 우주 세력인 '초등학문'(στοιχεῖα, 2:8, 20). 약속: 의식과 금욕 실천을 통한 '충만'."
+                    },
+                    {
+                        question: "골로새서 기독론에서 'πλήρωμα'(충만) 용어의 의미는 무엇입니까?",
+                        options: [
+                            "교회가 영적 은사로 채워지는 것을 의미한다",
+                            "모든 하나님의 충만이 그리스도 안에 육체로 거하시고(1:19; 2:9), 신자들이 그리스도 안에서 충만함(2:10)—다른 곳에서 찾지 말라",
+                            "구약 율법의 완성을 설명한다",
+                            "오순절의 성령 충만을 의미한다"
+                        ],
+                        correct: 1,
+                        explanation: "πλήρωμα 용어는 3번 나타납니다: '모든 충만이 그 안에 거하시기를 기뻐하시고'(1:19), '그 안에는 신성의 모든 충만이 육체로 거하시고'(2:9), '너희가 그 안에서 충만하여졌으니(πεπληρωμένοι)'(2:10). 바울의 논쟁: 거짓 가르침이 '충만'을 약속했다—바울은 충만이 오직 그리스도 안에만 있다고 반박합니다."
+                    },
+                    {
+                        question: "키너의 문화적 읽기에 따르면, '보좌들, 주권들, 통치자들, 권세들'(1:16)은 그리스-로마 세계관에서 무엇을 의미합니까?",
+                        options: [
+                            "세상 현실과 연결 없는 순전히 영적 존재들",
+                            "영적이고 정치적인 권세 모두—로마 세계에서 '종교'와 '정치' 사이에 명확한 경계 없음",
+                            "인간 정부 구조만",
+                            "특정 직무 설명을 가진 하늘의 천사들"
+                        ],
+                        correct: 1,
+                        explanation: "키너는 로마 세계에서 '영적'과 '정치적' 분리가 없었다고 강조합니다. 지역 총독들은 신적 권한을 주장했고, 황제들은 pontifex maximus였습니다. 바울이 그리스도께서 모든 권세를 창조/화해시키셨다고 말할 때(1:16, 20), 우주적 세력과 정치적 구조 모두를 포함합니다."
+                    },
+                    {
+                        question: "골로새서 2:15가 그리스도께서 '통치자들과 권세들을 무장해제하셨다(ἀπεκδυσάμενος)'고 말하는 것은 무엇을 의미합니까?",
+                        options: [
+                            "그리스도께서 악마들의 손에서 영적 무기를 제거하셨다",
+                            "그리스도께서 십자가를 통해 권세들의 권위를 벗기시고, 그의 개선 행렬에서 그들을 공개적 구경거리로 만드셨다",
+                            "그리스도께서 천사들을 설득하여 인간들과 싸우는 것을 중단하게 하셨다",
+                            "그리스도께서 모든 정부 권위 구조를 파괴하셨다"
+                        ],
+                        correct: 1,
+                        explanation: "동사 ἀπεκδυσάμενος는 '벗기다' 또는 '무장해제하다'를 의미합니다. 골 2:15는 패배한 적들이 수치스럽게 행진하는 로마 개선 행렬의 이미지를 사용합니다. 십자가(수치의 도구)가 그리스도의 승리가 됩니다—그는 죽고 부활함으로써 우주적 권세들을 무장해제하시고 그들의 무력함을 폭로하셨습니다."
+                    }
+                ]
+            },
+            philemon: {
+                en: [
+                    {
+                        question: "What is the scholarly consensus regarding Philemon's authorship and historical occasion?",
+                        options: [
+                            "Disputed authorship; likely written by a Pauline disciple",
+                            "Undisputed Pauline; Onesimus fled to Paul (possibly after theft), converted, and was sent back",
+                            "Written by Onesimus himself after Paul's death",
+                            "A fictional letter created to teach about Christian forgiveness"
+                        ],
+                        correct: 1,
+                        explanation: "All five scholars agree Philemon is authentically Pauline. The letter addresses a real historical situation: Onesimus, enslaved by Philemon, encountered Paul during imprisonment, converted, and is now being sent back with this letter asking Philemon to receive him 'as a brother' (v. 16)."
+                    },
+                    {
+                        question: "According to Keener's cultural analysis, what was at stake for Onesimus as a fugitive slave in the Roman world?",
+                        options: [
+                            "Minor social disapproval but no legal consequences",
+                            "Branding, torture, or crucifixion under Roman fugitive slave laws",
+                            "Automatic freedom if he reached another city",
+                            "A fine paid to his master"
+                        ],
+                        correct: 1,
+                        explanation: "Keener emphasizes the severity: Roman law treated fugitive slaves harshly as deterrent. Masters could legally brand, torture, or crucify recaptured slaves. Harboring a fugitive was aiding theft (slave = property). Paul's letter intervenes in this brutal system."
+                    },
+                    {
+                        question: "What is Paul's rhetorical strategy in verses 8-9, and why is it significant according to Brown?",
+                        options: [
+                            "Paul threatens Philemon with church discipline if he doesn't comply",
+                            "Paul appeals (παρακαλῶ) rather than commands (ἐπιτάσσειν), creating moral pressure through voluntary love",
+                            "Paul quotes Old Testament law to force obedience",
+                            "Paul uses emotional manipulation to guilt Philemon"
+                        ],
+                        correct: 1,
+                        explanation: "Paul explicitly says 'I COULD command (ἐπιτάσσειν), but I appeal (παρακαλῶ) for love's sake' (vv. 8-9). Brown notes this is crucial: Paul wants VOLUNTARY response, not coerced compliance. The letter creates space for Philemon's agency while applying moral pressure."
+                    },
+                    {
+                        question: "What is the theological significance of Paul's statement 'charge that to my account' (v. 18) according to Thielman?",
+                        options: [
+                            "Paul is merely offering to repay a financial debt",
+                            "It enacts substitutionary atonement in social form—Paul absorbs Onesimus' debt, mirroring Christ's work",
+                            "Paul is establishing a patron-client relationship",
+                            "It's a legal technicality to protect Philemon from loss"
+                        ],
+                        correct: 1,
+                        explanation: "Thielman reads v. 18 ('If he has wronged you...charge that to my account') as SOCIAL ENACTMENT of substitutionary atonement. Just as Christ took our debt/sin upon himself, Paul takes Onesimus' debt. This is gospel-shaped solidarity with the vulnerable."
+                    },
+                    {
+                        question: "What does Brown mean by saying Paul 'plants a Christological time bomb' in Philemon, and why is the 'Justice Shield' warning necessary?",
+                        options: [
+                            "The letter predicts violent revolution against slaveholders",
+                            "By calling Onesimus 'brother' within master-slave structure, Paul subverts slavery's ontological foundation; yet this letter was weaponized for 1,800+ years to justify Christian slaveholding",
+                            "Paul secretly tells Onesimus to escape again",
+                            "The letter contains coded language about the end times"
+                        ],
+                        correct: 1,
+                        explanation: "Brown notes Paul does NOT demand abolition but inserts 'brother' (ἀδελφός) into the relationship, undermining slavery's claim that slaves are ontologically inferior. The 'time bomb' is the trajectory toward liberation. HOWEVER, for 1,800+ years, this letter was misused to justify Christian slavery ('Paul didn't condemn it, so it must be OK'). The Justice Shield protects against this misreading."
+                    }
+                ],
+                ko: [
+                    {
+                        question: "빌레몬서의 저작권과 역사적 계기에 관한 학계 합의는 무엇입니까?",
+                        options: [
+                            "논쟁 있는 저작권; 아마도 바울 제자가 씀",
+                            "논쟁 없는 바울 서신; 오네시모가 바울에게 도망(아마도 절도 후), 개종, 돌려보내짐",
+                            "바울 사후 오네시모 자신이 씀",
+                            "기독교 용서를 가르치기 위해 만든 허구의 서신"
+                        ],
+                        correct: 1,
+                        explanation: "5명의 학자 모두 빌레몬서가 진정한 바울 서신임에 동의합니다. 이 서신은 실제 역사적 상황을 다룹니다: 빌레몬의 노예였던 오네시모가 투옥 중 바울을 만나 개종했고, 이제 그를 '형제로'(16절) 받으라고 요청하는 이 편지와 함께 돌려보내집니다."
+                    },
+                    {
+                        question: "키너의 문화 분석에 따르면, 로마 세계에서 도망 노예로서 오네시모에게 무엇이 걸려 있었습니까?",
+                        options: [
+                            "사소한 사회적 비난이지만 법적 결과는 없음",
+                            "로마 도망 노예법에 따른 낙인, 고문, 또는 십자가형",
+                            "다른 도시에 도달하면 자동 자유",
+                            "주인에게 지불하는 벌금"
+                        ],
+                        correct: 1,
+                        explanation: "키너는 심각성을 강조합니다: 로마법은 도망 노예를 억제책으로 가혹하게 다뤘습니다. 주인들은 재포획된 노예를 합법적으로 낙인 찍고, 고문하고, 십자가에 못 박을 수 있었습니다. 도망자를 숨겨주는 것은 절도를 돕는 것이었습니다(노예 = 재산). 바울의 편지는 이 잔인한 제도에 개입합니다."
+                    },
+                    {
+                        question: "8-9절에서 바울의 수사적 전략은 무엇이며, 브라운에 따르면 왜 중요합니까?",
+                        options: [
+                            "바울은 빌레몬이 순응하지 않으면 교회 징계로 위협함",
+                            "바울은 명령(ἐπιτάσσειν)하기보다 호소(παρακαλῶ)하여, 자발적 사랑을 통해 도덕적 압력을 만듦",
+                            "바울은 구약 율법을 인용하여 순종을 강요함",
+                            "바울은 빌레몬에게 죄책감을 주기 위해 감정 조작을 사용함"
+                        ],
+                        correct: 1,
+                        explanation: "바울은 명시적으로 '나는 명령할 수 있으나(ἐπιτάσσειν), 사랑을 위하여 호소하노라(παρακαλῶ)'(8-9절)고 말합니다. 브라운은 이것이 중요하다고 주목합니다: 바울은 강요된 순종이 아니라 자발적 반응을 원합니다. 편지는 도덕적 압력을 가하면서도 빌레몬의 주체성을 위한 공간을 만듭니다."
+                    },
+                    {
+                        question: "틸만에 따르면, 바울의 '이것을 내 앞으로 계산하라'(18절) 진술의 신학적 의미는 무엇입니까?",
+                        options: [
+                            "바울은 단순히 재정적 빚을 갚겠다고 제안하고 있다",
+                            "그것은 사회적 형태로 대속적 속죄를 실행한다—바울이 오네시모의 빚을 흡수하여 그리스도의 사역을 반영함",
+                            "바울은 후원자-의뢰인 관계를 확립하고 있다",
+                            "빌레몬을 손실로부터 보호하기 위한 법적 기술이다"
+                        ],
+                        correct: 1,
+                        explanation: "틸만은 18절('그가 만일 네게...빚진 것이 있으면 이것을 내 앞으로 계산하라')을 대속적 속죄의 사회적 실행으로 읽습니다. 그리스도께서 우리의 빚/죄를 자신에게 지신 것처럼, 바울은 오네시모의 빚을 집니다. 이것은 취약한 자와의 복음 모양의 연대입니다."
+                    },
+                    {
+                        question: "브라운이 빌레몬서에서 바울이 '기독론적 시한폭탄을 심는다'고 말하는 것은 무엇을 의미하며, 왜 '정의의 방패' 경고가 필요합니까?",
+                        options: [
+                            "편지는 노예 소유주에 대한 폭력 혁명을 예언한다",
+                            "주인-노예 구조 내에서 오네시모를 '형제'라고 부름으로써, 바울은 노예제의 존재론적 기초를 전복한다; 그러나 이 편지는 1,800년 이상 기독교 노예 소유를 정당화하는 데 무기화되었다",
+                            "바울은 비밀리에 오네시모에게 다시 도망치라고 말한다",
+                            "편지는 종말에 관한 암호화된 언어를 포함한다"
+                        ],
+                        correct: 1,
+                        explanation: "브라운은 바울이 폐지를 요구하지 않지만 관계에 '형제'(ἀδελφός)를 삽입하여 노예가 존재론적으로 열등하다는 노예제의 주장을 훼손한다고 주목합니다. '시한폭탄'은 해방을 향한 궤적입니다. 그러나 1,800년 이상 이 편지는 기독교 노예제를 정당화하는 데 오용되었습니다('바울이 비난하지 않았으니 괜찮을 것이다'). 정의의 방패는 이러한 오독으로부터 보호합니다."
+                    }
+                ]
+            }
+        };
+
+        // State Management
+        let currentLang = 'en';
+        let quizStates = {
+            ephesians: { answers: {}, submitted: false },
+            philippians: { answers: {}, submitted: false },
+            colossians: { answers: {}, submitted: false },
+            philemon: { answers: {}, submitted: false }
+        };
+
+        // Language Toggle
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ko' : 'en';
+            document.body.classList.toggle('korean');
+            
+            // Regenerate quizzes for current section
+            const currentSection = document.querySelector('.content-section:not(.hidden)');
+            if (currentSection && currentSection.id !== 'overview') {
+                generateQuiz(currentSection.id);
+            }
+        }
+
+        // Section Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-section') === sectionId) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Generate quiz if letter section
+            if (sectionId !== 'overview') {
+                generateQuiz(sectionId);
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Quiz Generation
+        function generateQuiz(letter) {
+            const container = document.getElementById(`quiz-${letter}`);
+            const questions = quizData[letter][currentLang];
+            const state = quizStates[letter];
+            
+            let html = '';
+            
+            questions.forEach((q, qIndex) => {
+                html += `
+                    <div class="quiz-question" data-question="${qIndex}">
+                        <h4>${currentLang === 'en' ? 'Question' : '질문'} ${qIndex + 1}</h4>
+                        <p>${q.question}</p>
+                        <div class="quiz-options">
+                            ${q.options.map((option, idx) => `
+                                <div class="quiz-option ${state.answers[qIndex] === idx ? 'selected' : ''} 
+                                            ${state.submitted ? (idx === q.correct ? 'correct' : (state.answers[qIndex] === idx ? 'incorrect' : '')) : ''}"
+                                     data-letter="${letter}" data-question="${qIndex}" data-option="${idx}"
+                                     style="${state.submitted ? 'cursor: default;' : 'cursor: pointer;'}">
+                                    ${String.fromCharCode(65 + idx)}. ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="quiz-feedback ${state.submitted && state.answers[qIndex] !== undefined ? 'show' : ''} 
+                                    ${state.submitted && state.answers[qIndex] === q.correct ? 'correct' : 'incorrect'}">
+                            ${state.submitted && state.answers[qIndex] === q.correct 
+                                ? (currentLang === 'en' ? '✓ Correct!' : '✓ 정답!') 
+                                : (currentLang === 'en' ? '✗ Incorrect.' : '✗ 오답.')}
+                            ${state.submitted ? `<br><br><strong>${currentLang === 'en' ? 'Explanation' : '설명'}:</strong> ${q.explanation}` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (!state.submitted) {
+                html += `
+                    <button class="quiz-submit" data-letter="${letter}" data-action="submit">
+                        ${currentLang === 'en' ? 'Submit Answers' : '답변 제출'}
+                    </button>
+                `;
+            } else {
+                const score = Object.keys(state.answers).filter(q => 
+                    state.answers[q] === questions[q].correct
+                ).length;
+                html += `
+                    <div class="quiz-score show">
+                        ${currentLang === 'en' ? 'Score' : '점수'}: ${score}/${questions.length} 
+                        (${Math.round(score/questions.length * 100)}%)
+                    </div>
+                    <button class="quiz-submit" data-letter="${letter}" data-action="reset">
+                        ${currentLang === 'en' ? 'Try Again' : '다시 시도'}
+                    </button>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // Add event listeners to quiz options
+            if (!state.submitted) {
+                container.querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const letter = this.getAttribute('data-letter');
+                        const qIndex = parseInt(this.getAttribute('data-question'));
+                        const oIndex = parseInt(this.getAttribute('data-option'));
+                        selectAnswer(letter, qIndex, oIndex);
+                    });
+                });
+            }
+            
+            // Add event listeners to buttons
+            container.querySelectorAll('.quiz-submit').forEach(button => {
+                button.addEventListener('click', function() {
+                    const letter = this.getAttribute('data-letter');
+                    const action = this.getAttribute('data-action');
+                    if (action === 'submit') {
+                        submitQuiz(letter);
+                    } else if (action === 'reset') {
+                        resetQuiz(letter);
+                    }
+                });
+            });
+        }
+
+        function selectAnswer(letter, questionIndex, optionIndex) {
+            quizStates[letter].answers[questionIndex] = optionIndex;
+            generateQuiz(letter);
+        }
+
+        function submitQuiz(letter) {
+            const questions = quizData[letter][currentLang];
+            const answeredAll = Object.keys(quizStates[letter].answers).length === questions.length;
+            
+            if (!answeredAll) {
+                alert(currentLang === 'en' 
+                    ? 'Please answer all questions before submitting.' 
+                    : '제출하기 전에 모든 질문에 답하세요.');
+                return;
+            }
+            
+            quizStates[letter].submitted = true;
+            generateQuiz(letter);
+        }
+
+        function resetQuiz(letter) {
+            quizStates[letter] = { answers: {}, submitted: false };
+            generateQuiz(letter);
+        }
+
+        // Initialize
+        window.onload = function() {
+            // Set initial state - overview section is already visible by default
+            // No need to call showSection here as it's already active
+        };
+    </script>
+</body>
+</html>
